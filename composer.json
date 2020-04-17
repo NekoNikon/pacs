@@ -1,0 +1,11 @@
+{
+    "name": "nekonb/antis-pacs",
+    "description": "web service for dcm4chee",
+    "authors": [
+        {
+            "name": "NekoNikon",
+            "email": "nikon9nikon@gmail.com"
+        }
+    ],
+    "require": {}
+}
