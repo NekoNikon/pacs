@@ -59,10 +59,12 @@
 ?>
 <script >
         var studies = [];
+
+        //test query
         $(document).ready(function() {
             $.ajax({
                 type:'POST',
-                url:'./ajax/getPatients.php',
+                url:'./ajax/getStudies.php',
                 dataType:"json",
                 data:{},
                 success:function(response) {
@@ -70,8 +72,8 @@
                     response.forEach(function(el) {
                         console.log(el);
                         studies.push({
-                            uid:el['0020000D'].Value[0];
-                            fio:el['00100010'].Value[0].Alphabetic;
+                            uid:el['0020000D'].Value[0],
+                            fio:el['00100010'].Value[0].Alphabetic,
                             
                         })                
                     });
