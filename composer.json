@@ -7,5 +7,7 @@
             "email": "nikon9nikon@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "components/jquery": "^3.4"
+    }
 }
