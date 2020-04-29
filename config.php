@@ -1,4 +1,6 @@
 <?php
+    ob_start();
+    session_start();
     require_once "classes/dcm4cheeAPI.php";
     $config = array(
         "host"=>"http://89.218.233.58",

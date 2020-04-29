@@ -1,5 +1,6 @@
 <?php
     include_once "../config.php";
-    $res = $server->getStudies($_POST['iin']);
+    
+    $res = $server->getSource($_POST['suid']);
     echo json_encode($res);
     

@@ -8,7 +8,7 @@ html , body  {
     height: 100%;
 }
 
-.container {
+.main-container {
     height: 100%;
     display: grid;
     grid-template-columns: 108px auto; 
@@ -25,8 +25,43 @@ html , body  {
                 height: 90px;
             }
             padding: 0px 20px 0px 20px;
-            
-            table.patients {
+            table.series {
+                
+                empty-cells: show;
+                border-collapse: collapse;
+                margin-left: 10px;
+            }
+            table.studies {
+                .sub-border {
+                    width: 100%;
+                    padding: 8px;
+                    
+                    border-left: 1px solid $border-color;
+                    border-right: 1px solid $border-color;
+                    .sub {
+                        display: inline-flex;
+                        div {
+                            // padding-left: 10px;
+                            // padding-right: 10px;
+                            padding: 10px 20px 10px 10px;
+                            border: 1px solid $border-color;
+
+                            span {
+                                margin: 0px 10px 0px 10px;
+                            }
+                        }
+                    }
+                    // padding: 5px 5px 5px 10px;
+                    td {   
+                        border: none;
+                        background-color: $subrow-color;
+                        .sub-td {
+                            padding: 0px;
+                        }
+                    }
+                    
+                }
+
                 width: 100%;
                 empty-cells: show;
                 border-collapse: collapse;
@@ -38,26 +73,120 @@ html , body  {
                     } 
                 }
                 tbody {
-                    td {
+                    td.main_td {
                         padding: 5px 5px 5px 10px;
                         border: 1px solid $border-color;
                         background-color: $base-color;                        
+                        .icon {
+                            margin-right: 15px;  
+                        }
                     }
                     td.iin {
                         font-weight: 700;
                     }
-                    tr.sub td {
-                        background-color: $subrow-color;
+                    tr {
+                        &:hover {
+                            color: $select-color;
+                        }
                     }
-                    
+
+                    tr.sub { 
+                        td {
+                            padding: 5px 5px 5px 10px;
+                            border: 1px solid $border-color;
+                            background-color: $subrow-color;
+                        }
+                    }                    
                 }
                 
             }
-            table.serias {
-                margin-left: 8px;
-                width: 50%;
+            
+        }
+        .pagination {
+            margin-top: 20px;
+            display: inline-block;
+            a {
+                color:$font-color;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+                transition: color .3s;
+                background-color: $base-color;
+                margin-right: 2.5px;
+                
             }
+            a.active {
+                background-color: $base-color;
+                color: $select-color;
+                
+            }
+            a:hover:not(.active) {background-color: $base-color}
         }
     }
 }
 
+.loader {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    border: 16px solid $font-color; /* Light grey */
+    border-top: 16px solid $base-color; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+
+    .dataTables_wrapper .dataTables_paginate {
+        float: left !important;
+        margin-top: 20px !important;
+        a.paginate_button , .paginate_button.disabled {
+            border-radius: 0px !important;
+            color:$font-color !important;
+            float: left !important;
+            padding: 8px 16px !important;
+            text-decoration: none !important;
+            transition: color .3s !important;
+            background-color: $base-color !important;
+            margin-right: 2.5px !important;
+            &:not(.current) {
+                background-color: $base-color !important
+            }
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        
+            color: $select-color !important;
+       
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            &:hover {
+                border: none;
+                color : $select-color !important;
+            }
+            
+        }
+    }
+
+
+
+    table.dataTable tr.sub-border {
+        padding: 0px;
+        td {
+            padding-left: 10px;
+        }
+        &:not(:first-child):not(:last-child) {
+            padding: 0px 10px 0px 10px;
+        }
+        &:last-child {
+            padding: 0px 10px 10px 10px;
+        }
+        &:first-child  {
+            padding: 10px 10px 0px 10px;
+        }
+    }

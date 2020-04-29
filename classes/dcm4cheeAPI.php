@@ -1,5 +1,4 @@
 <?php 
-    
     class DCM4CHEEAPI {
         protected $config;
 
@@ -27,7 +26,7 @@
         }
 
         public function setRequest($service, $post_params=array(),$method="post") {
-            $token = $this->SetToken();
+            // $token = $this->SetToken();
             
             $ch1 = curl_init($this->config['host']);
             if($post_params && count($post_params)){
@@ -49,7 +48,7 @@
             curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false );
             curl_setopt($ch1, CURLOPT_HTTPHEADER, array(
                 'Content-Type: application/json',
-                'Authorization: Bearer ' . $token->access_token
+                'Authorization: Bearer ' . $_SESSION['token']
             ));       
             // curl_setopt($ch1, CURLOPT_USERPWD, $this->config['login'] . ":" . $this->config['pass']);
             curl_setopt($ch1, CURLOPT_URL, $this->config['host'].":".$this->config['port'].$service);       
@@ -60,19 +59,35 @@
             return $response;
         }
 
-        public function getStudies($studiesID = null)
+        public function getSeries($sid)
         {
-            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/".$studiesID."?limit=1";
+            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/".$sid."/series?includefield=all";
             return $this->setRequest($service,"","get");
         }
-        public function getPatients($patientID = null)
+        public function getSource($var = null)
         {
-            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/patients/".$patientID."?";
+            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/".$var."/instances?includefield=all&limit=1";
+            return $this->setRequest($service,"","get");
+        }
+        public function getStudies($iin)
+        {
+            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/?includefield=all&PatientID=".$iin."";
+            return $this->setRequest($service,"","get");
+        }
+        public function getStudiesInstaces($studyID = null)
+        {
+            $service ="/dcm4chee-arc/aets/DCM4CHEE/rs/studies/".$studyID."/instances?";
+            return $this->setRequest($service,"","get");
+
+        }
+        public function getPatients($limit)
+        {
+            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/patients/?includefield=all&offset=0&limit=20";
             return $this->setRequest($service,"","get");
         }
         public function getInstances($instanceID = null)
         {
-            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/instances/".$instanceID."?";
+            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/instances/".$instanceID."?InstitutionName=*";
             return $this->setRequest($service,"","get");
         }
         public function getQueryFromFilter($filter) {
