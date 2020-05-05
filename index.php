@@ -6,35 +6,31 @@
     // print_r($res[0]);
     // echo "</pre>";
 ?>
-    <div class="main-container">
-        <div class="sideleft">
-        
-        </div>
 
-        <div class="main">
-            <div class="workarea">
-                <header></header>
-                <div class="table-wrap">   
-                    <table class="studies" id="studies" >
-                        <thead>
-                            <tr>
-                                <td><input type="text"></td>
-                                <td>ИИН</td>
-                                <td>Пол</td>
-                                <td>Дата рождения</td>
-                                <td>Дата исследования</td>
-                                <td>Описание</td>
-                                <td>Источник</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="studies table  w-100" id="studies" >
+                <thead>
+                    <tr>
+                        <td class="search"> Fio</td>
+                        <td class="search"> ИИН</td>
+                        <td>Пол</td>
+                        <td class="search"> Дата рождения</td>
+                        <td class="search"> Дата исследования</td>
+                        <td class="search"> Описание</td>
+                        <td class="search"> Источник</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+                
+            </table>
         </div>
     </div>
+
+
+    <div id="info"></div>
     <div id="loader" class="loader"></div>
     
 <?php

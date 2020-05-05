@@ -4,16 +4,82 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var loadSeries = /*#__PURE__*/function () {
+var getSiriesInfo = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-    var id, getSiries, dataSeries, html;
+    var seriesID, studiesID, getInfo, dataSeriesInfo, html;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            id = $(e.currentTarget).data('id');
-            console.log(id);
+            seriesID = $(e.currentTarget).data('seriesid');
+            studiesID = $(e.currentTarget).data('studiesid');
             _context.next = 4;
+            return fetch('./ajax/getSeriesInfo.php', {
+              method: 'post',
+              headers: {
+                'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+              },
+              body: "ser=".concat(seriesID, "&stu=").concat(studiesID)
+            });
+
+          case 4:
+            getInfo = _context.sent;
+            _context.next = 7;
+            return getInfo.json();
+
+          case 7:
+            dataSeriesInfo = _context.sent;
+            console.log(dataSeriesInfo);
+            html = "";
+            html += "<div class='info-panel'>";
+            dataSeriesInfo.forEach(function (el) {
+              html += "<p>Special character set -  ".concat(el.specCharSet, "</p>");
+              html += "<p>Image Type -  ";
+              el.imageType.forEach(function (sub) {
+                html += "".concat(sub, ", ");
+              });
+              html += "</p>";
+              html += "<p>Instance Creation Date -  ".concat(el.instanceDate, "</p>");
+              html += "<p>Instance Creation Time -  ".concat(el.instanceTime, "</p>");
+              html += "<p>SOP Class UID -  ".concat(el.SOPClass, "</p>");
+              html += "<p>SOP Instance UID -  ".concat(el.SOPInstance, "</p>");
+              html += "<p>Study Date-  ".concat(el.studyDate, "</p>");
+              html += "<p>Series Date -  ".concat(el.seriesDate, "</p>"); // html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
+            });
+            html += "</div>";
+            $('#info').html(html);
+
+          case 14:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function getSiriesInfo(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+var loadSeries = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+    var id, html, getSiries, dataSeries;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            id = $(e.currentTarget).data('id');
+            $('.sub-border').remove();
+            console.log(id);
+            html = "";
+
+            if ($("tr[data-id=\"".concat(id, "\"]")).hasClass('open')) {
+              _context2.next = 13;
+              break;
+            }
+
+            _context2.next = 7;
             return fetch('./ajax/getSeries.php', {
               method: 'post',
               headers: {
@@ -22,17 +88,16 @@ var loadSeries = /*#__PURE__*/function () {
               body: 'id=' + id
             });
 
-          case 4:
-            getSiries = _context.sent;
-            _context.next = 7;
+          case 7:
+            getSiries = _context2.sent;
+            _context2.next = 10;
             return getSiries.json();
 
-          case 7:
-            dataSeries = _context.sent;
+          case 10:
+            dataSeries = _context2.sent;
             console.log(dataSeries);
-            html = "";
             dataSeries.forEach(function (el) {
-              html += "<tr class='sub-border'>";
+              html += "<tr class='sub-border' data-seriesid=".concat(el.ser, " data-studiesid=").concat(el.study, ">");
               html += "<td class='sub-td' colspan=7>";
               html += "<div class=\"sub\" data-id=".concat(el.sop, ">");
               html += "<div>";
@@ -40,36 +105,39 @@ var loadSeries = /*#__PURE__*/function () {
               html += "<span class='download'><img src=\"src/icons/download.png\"></span>".concat(el.sop, "</div>");
               html += "<div>".concat(el.cmean, "</div>");
               html += "<div>".concat(el.mod, "</div>");
+              html += "<div>".concat(el.ser, "</div>");
               html += "</div>";
               html += "</td>";
               html += "</tr>";
             });
-            $('.sub-border').remove();
-            $("tr[data-id=\"".concat(id, "\"]")).after(html);
 
           case 13:
+            $("tr[data-id=\"".concat(id, "\"]")).toggleClass('open');
+            $("tr[data-id=\"".concat(id, "\"]")).after(html);
+
+          case 15:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
       }
-    }, _callee);
+    }, _callee2);
   }));
 
-  return function loadSeries(_x) {
-    return _ref.apply(this, arguments);
+  return function loadSeries(_x2) {
+    return _ref2.apply(this, arguments);
   };
 }();
 
 var load = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-    var loader, getPatients, dataPtients, html, table;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+    var loader, getPatients, dataPtients, html, options, table;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
             loader = document.getElementsByClassName('.loader');
             loader.style = null;
-            _context2.next = 4;
+            _context3.next = 4;
             return fetch('./ajax/getPatients.php', {
               method: 'post',
               headers: {
@@ -79,12 +147,12 @@ var load = /*#__PURE__*/function () {
             });
 
           case 4:
-            getPatients = _context2.sent;
-            _context2.next = 7;
+            getPatients = _context3.sent;
+            _context3.next = 7;
             return getPatients.json();
 
           case 7:
-            dataPtients = _context2.sent;
+            dataPtients = _context3.sent;
             console.log(dataPtients);
             html = "";
             dataPtients.forEach(function (el) {
@@ -100,25 +168,8 @@ var load = /*#__PURE__*/function () {
             });
             $("table.studies tbody").html(html);
             $('#loader').css('display', 'none');
-            table = $("table.studies").DataTable({
-              "aoColumns": [{
-                "sType": "string"
-              }, {
-                "sType": "string"
-              }, {
-                "sType": "string"
-              }, {
-                "sType": "string"
-              }, {
-                "sType": "string"
-              }, {
-                "sType": "string"
-              }, {
-                "sType": "string"
-              }],
-              info: false,
-              bLengthChange: false,
-              bFilter: false,
+            options = {
+              dom: 't<"left"p>',
               language: {
                 paginate: {
                   next: '<img src="src/icons/pagi_arrow_right.png">',
@@ -126,20 +177,43 @@ var load = /*#__PURE__*/function () {
                   previous: '<img src="src/icons/pagi_arrow_left.png">' // or '←' 
 
                 }
-              }
+              },
+              bDestroy: true,
+              bRetrieve: true,
+              info: false,
+              bLengthChange: false,
+              responsive: true
+            };
+            table = $("table.studies").DataTable(options); // generate search inputs
+
+            $('table.studies thead td.search').each(function () {
+              var title = $(this).text();
+              $(this).html('<input class="search" type="text"  placeholder="' + title + '">');
+            });
+            table.columns().every(function () {
+              var that = this;
+              var inputs = $("thead input");
+              $(document).delegate("thead input", 'keyup change', function (e) {
+                console.log($(e.currentTarget).val());
+                table.search($(e.currentTarget).val()).rows().draw();
+              });
+              $("thead input").on('click', function (e) {
+                e.stopPropagation();
+              });
             });
             $(document).delegate('td.series', 'click', loadSeries);
+            $(document).delegate('tr.sub-border', 'click', getSiriesInfo);
 
-          case 15:
+          case 19:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2);
+    }, _callee3);
   }));
 
   return function load() {
-    return _ref2.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 }();
 

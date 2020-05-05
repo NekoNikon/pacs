@@ -64,6 +64,11 @@
             $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/".$sid."/series?includefield=all";
             return $this->setRequest($service,"","get");
         }
+        public function getSeriesInfo($sid , $serid)
+        {
+            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/".$sid."/series/".$serid."/instances/?includefield=all";
+            return $this->setRequest($service,"","get");
+        }
         public function getSource($var = null)
         {
             $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/".$var."/instances?includefield=all&limit=1";

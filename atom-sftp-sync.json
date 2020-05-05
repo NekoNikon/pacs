@@ -1,0 +1,10 @@
+{
+    "type": "sftp",
+    "host": "89.218.233.58",
+    "username": "webdev",
+    "password": "deveLOP&8712web",
+    "port": 1022,
+    "remotePath": "/var/www/html/new",
+    "uploadOnSave": true,
+    "uploadConfigFile": false
+}
