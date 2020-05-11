@@ -30,26 +30,26 @@ var getSiriesInfo = /*#__PURE__*/function () {
           case 7:
             dataSeriesInfo = _context.sent;
             console.log(dataSeriesInfo);
-            html = "";
-            html += "<div class='info-panel'>";
-            dataSeriesInfo.forEach(function (el) {
-              html += "<p>Special character set -  ".concat(el.specCharSet, "</p>");
-              html += "<p>Image Type -  ";
-              el.imageType.forEach(function (sub) {
-                html += "".concat(sub, ", ");
-              });
-              html += "</p>";
-              html += "<p>Instance Creation Date -  ".concat(el.instanceDate, "</p>");
-              html += "<p>Instance Creation Time -  ".concat(el.instanceTime, "</p>");
-              html += "<p>SOP Class UID -  ".concat(el.SOPClass, "</p>");
-              html += "<p>SOP Instance UID -  ".concat(el.SOPInstance, "</p>");
-              html += "<p>Study Date-  ".concat(el.studyDate, "</p>");
-              html += "<p>Series Date -  ".concat(el.seriesDate, "</p>"); // html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
-            });
-            html += "</div>";
-            $('#info').html(html);
+            html = ""; // html+="<div class='info-panel'>";
+            //     dataSeriesInfo.forEach(el => {
+            //         html+=`<p>Special character set -  ${el.specCharSet}</p>`;
+            //         html+=`<p>Image Type -  `;
+            //         el.imageType.forEach(sub=>{
+            //             html+=`${sub}, `;
+            //         });
+            //         html+="</p>";
+            //         html+=`<p>Instance Creation Date -  ${el.instanceDate}</p>`;
+            //         html+=`<p>Instance Creation Time -  ${el.instanceTime}</p>`;
+            //         html+=`<p>SOP Class UID -  ${el.SOPClass}</p>`;
+            //         html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
+            //         html+=`<p>Study Date-  ${el.studyDate}</p>`;
+            //         html+=`<p>Series Date -  ${el.seriesDate}</p>`;
+            //         // html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
+            //     });
+            // html+="</div>";  
+            // $('#info').html(html);
 
-          case 14:
+          case 10:
           case "end":
             return _context.stop();
         }
@@ -130,14 +130,18 @@ var loadSeries = /*#__PURE__*/function () {
 
 var load = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-    var loader, getPatients, dataPtients, html, options, table;
+    var loader, getPatients, dataPtients, html, options, table, panel;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
+            $('#dateOfStudy').datepicker({
+              language: 'ru',
+              clearBtn: true
+            });
             loader = document.getElementsByClassName('.loader');
             loader.style = null;
-            _context3.next = 4;
+            _context3.next = 5;
             return fetch('./ajax/getPatients.php', {
               method: 'post',
               headers: {
@@ -146,18 +150,18 @@ var load = /*#__PURE__*/function () {
               body: "limit=10"
             });
 
-          case 4:
+          case 5:
             getPatients = _context3.sent;
-            _context3.next = 7;
+            _context3.next = 8;
             return getPatients.json();
 
-          case 7:
+          case 8:
             dataPtients = _context3.sent;
             console.log(dataPtients);
             html = "";
             dataPtients.forEach(function (el) {
               html += "<tr class=\"table-row\" data-id=".concat(el.suid, " data-iin=\"").concat(el.iin, "\">");
-              html += "<td data-id=".concat(el.suid, " data-iin=\"").concat(el.iin, "\" class=\"series main_td\"><img class=\"arrow-right icon\" src=\"src/icons/arrow_right_icon.png\"> ").concat(el.fio, "</td>");
+              html += "<td data-id=".concat(el.suid, " data-iin=\"").concat(el.iin, "\" class=\"series main_td\"><img class=\"arrow arrow-right icon\" src=\"src/icons/arrow_right_icon.png\"> ").concat(el.fio, "</td>");
               html += "<td class=\"iin main_td\" >".concat(el.iin, "</td>");
               html += "<td class=\"main_td\">".concat(el.sex, "</td>");
               html += "<td class=\"main_td\">".concat(el.btd, "</td>");
@@ -178,6 +182,8 @@ var load = /*#__PURE__*/function () {
 
                 }
               },
+              // scrollY: "200px",
+              // scrollCollapse: true,
               bDestroy: true,
               bRetrieve: true,
               info: false,
@@ -186,25 +192,27 @@ var load = /*#__PURE__*/function () {
             };
             table = $("table.studies").DataTable(options); // generate search inputs
 
-            $('table.studies thead td.search').each(function () {
+            $('table.studies thead td.search').each(function (i, e) {
               var title = $(this).text();
-              $(this).html('<input class="search" type="text"  placeholder="' + title + '">');
+              $(this).html("<div class=\"search-block clearable\">\n            <input data-id='+i+' class=\"search noclick\" type=\"search\"  placeholder=".concat(title, "> \n            <i class=\"fa fa-search noclick\"></i>\n        </div>"));
             });
             table.columns().every(function () {
               var that = this;
               var inputs = $("thead input");
               $(document).delegate("thead input", 'keyup change', function (e) {
-                console.log($(e.currentTarget).val());
                 table.search($(e.currentTarget).val()).rows().draw();
               });
-              $("thead input").on('click', function (e) {
+              $("thead .noclick").on('click', function (e) {
                 e.stopPropagation();
               });
             });
             $(document).delegate('td.series', 'click', loadSeries);
             $(document).delegate('tr.sub-border', 'click', getSiriesInfo);
+            panel = "";
+            panel += "<div class='info-panel row'>\n        <div class=\"col-6 info-block series\"><div class=\"noselect\"><p>\u0421\u0435\u0440\u0438\u044F \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u0430. \u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u043D\u0435 \u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D</p></div></div>\n        <div class=\"col-6 info-block picture\"><div class=\"noselect\"><p>\u0421\u043D\u0438\u043C\u043E\u043A \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D. \u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u043D\u0435 \u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D</p><div></div>\n    </div>";
+            $('#info').html(panel);
 
-          case 19:
+          case 23:
           case "end":
             return _context3.stop();
         }

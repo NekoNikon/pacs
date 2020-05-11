@@ -12,24 +12,24 @@ let getSiriesInfo = async (e) => {
     console.log(dataSeriesInfo);
 
     let html = "";
-    html+="<div class='info-panel'>";
-        dataSeriesInfo.forEach(el => {
-            html+=`<p>Special character set -  ${el.specCharSet}</p>`;
-            html+=`<p>Image Type -  `;
-            el.imageType.forEach(sub=>{
-                html+=`${sub}, `;
-            });
-            html+="</p>";
-            html+=`<p>Instance Creation Date -  ${el.instanceDate}</p>`;
-            html+=`<p>Instance Creation Time -  ${el.instanceTime}</p>`;
-            html+=`<p>SOP Class UID -  ${el.SOPClass}</p>`;
-            html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
-            html+=`<p>Study Date-  ${el.studyDate}</p>`;
-            html+=`<p>Series Date -  ${el.seriesDate}</p>`;
-            // html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
-        });
-    html+="</div>";  
-    $('#info').html(html);
+    // html+="<div class='info-panel'>";
+    //     dataSeriesInfo.forEach(el => {
+    //         html+=`<p>Special character set -  ${el.specCharSet}</p>`;
+    //         html+=`<p>Image Type -  `;
+    //         el.imageType.forEach(sub=>{
+    //             html+=`${sub}, `;
+    //         });
+    //         html+="</p>";
+    //         html+=`<p>Instance Creation Date -  ${el.instanceDate}</p>`;
+    //         html+=`<p>Instance Creation Time -  ${el.instanceTime}</p>`;
+    //         html+=`<p>SOP Class UID -  ${el.SOPClass}</p>`;
+    //         html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
+    //         html+=`<p>Study Date-  ${el.studyDate}</p>`;
+    //         html+=`<p>Series Date -  ${el.seriesDate}</p>`;
+    //         // html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
+    //     });
+    // html+="</div>";  
+    // $('#info').html(html);
 } 
 
 
@@ -60,14 +60,15 @@ let loadSeries = async (e) => {
     }
     $(`tr[data-id="${id}"]`).toggleClass('open');
     $(`tr[data-id="${id}"]`).after(html);
-
-
-
-
 }
 
 
 let load = async function (){
+    $('#dateOfStudy').datepicker({
+        language:'ru',
+        clearBtn:true
+    });
+
     let loader = document.getElementsByClassName('.loader');
     loader.style=null;
     let getPatients = await fetch('./ajax/getPatients.php',{method:'post',headers:{'Content-type' :  'application/x-www-form-urlencoded;charset=utf-8'},body:"limit=10"});
@@ -77,7 +78,7 @@ let load = async function (){
     var html = "";
     dataPtients.forEach(el => {
         html+=`<tr class="table-row" data-id=${el.suid} data-iin="${el.iin}">`;
-            html+=`<td data-id=${el.suid} data-iin="${el.iin}" class="series main_td"><img class="arrow-right icon" src="src/icons/arrow_right_icon.png"> ${el.fio}</td>`;
+            html+=`<td data-id=${el.suid} data-iin="${el.iin}" class="series main_td"><img class="arrow arrow-right icon" src="src/icons/arrow_right_icon.png"> ${el.fio}</td>`;
             html+=`<td class="iin main_td" >${el.iin}</td>`;
             html+=`<td class="main_td">${el.sex}</td>`;
             html+=`<td class="main_td">${el.btd}</td>`;
@@ -97,6 +98,8 @@ let load = async function (){
                 previous: '<img src="src/icons/pagi_arrow_left.png">' // or '←' 
             }
         },
+        // scrollY: "200px",
+        // scrollCollapse: true,
         bDestroy: true,
         bRetrieve: true,
         info: false,
@@ -108,25 +111,37 @@ let load = async function (){
     let table = $("table.studies").DataTable(options);
 
     // generate search inputs
-    $('table.studies thead td.search').each(function() {
+    $('table.studies thead td.search').each(function(i,e) {
         let title = $(this).text();
-        $(this).html('<input class="search" type="text"  placeholder="'+title+'">'); 
+        $(this).html(`<div class="search-block clearable">
+            <input data-id='+i+' class="search noclick" type="search"  placeholder=${title}> 
+            <i class="fa fa-search noclick"></i>
+        </div>`); 
     })
 
     table.columns().every( function () {
         var that = this;
         var inputs = $("thead input");
-        $(document).delegate("thead input" ,'keyup change', function (e) {   
-            console.log($(e.currentTarget).val());
+        $(document).delegate("thead input" ,'keyup change', function (e) { 
+             
             table.search($(e.currentTarget).val()).rows().draw();
         });
-        $("thead input").on('click' , function(e) {
+        $("thead .noclick").on('click' , function(e) {
             e.stopPropagation();
         });
     });
 
+ 
     $(document).delegate('td.series' , 'click' , loadSeries);
     $(document).delegate('tr.sub-border' , 'click' , getSiriesInfo);
+
+    var panel="";
+    panel+=
+    `<div class='info-panel row'>
+        <div class="col-6 info-block series"><div class="noselect"><p>Серия не выбрана. Просмотр не доступен</p></div></div>
+        <div class="col-6 info-block picture"><div class="noselect"><p>Снимок не выбран. Просмотр не доступен</p><div></div>
+    </div>`;
+    $('#info').html(panel);
 }
 
 window.onload = load();

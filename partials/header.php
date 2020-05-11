@@ -23,6 +23,7 @@
 
     <link rel="stylesheet" href="vendors/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="vendors/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-datepicker.css">
     <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"> -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="build/css/style.css">
@@ -64,8 +65,21 @@
 
         <!-- Header-->
         <header id="header" class="header">
-
-
+            <div class="left">
+                <input id="dateOfStudy" type="text" placeholder="Дата исследования">
+                <input type="radio" name="times" value="today" id="today" >
+                <label for="today">Сегодня</label>
+                <input type="radio" name="times" value="sevenday" id="sevenday">
+                <label for="sevenday">7Д</label>
+                <input type="radio" name="times" value="month" id="month">
+                <label for="month">1М</label>
+                <input type="radio" name="times" value="year" id="year">
+                <label for="year">1Г</label>
+                <input type="radio" name="times" value="any" id="any">
+                <label for="any">Любая дата</label>
+                <button ><i class="fa fa-search"></i></button>
+            </div>
+            
         </header><!-- /header -->
         <!-- Header-->
 

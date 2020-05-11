@@ -30,9 +30,9 @@
     </div>
 
 
-    <div id="info"></div>
-    <div id="loader" class="loader"></div>
     
+    <div id="loader" class="loader"></div>
+    <footer class="navbar-fixed-bottom " id="info"></footer>
 <?php
     require_once "partials/footer.php";
 ?>

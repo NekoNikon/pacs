@@ -1283,10 +1283,12 @@ body.open .navbar .navbar-brand.hidden {
 .right-panel header.header {
   background: #1e2228;
   clear: both;
+  position: relative;
   display: inline-block;
   padding: 15px 20px 13px;
   width: 100%; 
-  height: 120px;}
+  /* height: 120px; */
+}
 
 .open .right-panel {
   margin-left: -210px; }
@@ -2359,7 +2361,9 @@ header .form-inline {
 
 @media (max-width: 575.99px) {
   body {
-    display: block; }
+    display: block; 
+    
+  }
   aside.left-panel {
     display: block;
     height: auto;

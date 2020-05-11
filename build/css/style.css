@@ -5,7 +5,28 @@
 }
 
 header {
-  height: 90px;
+  height: 90px !important;
+}
+header input, header button {
+  vertical-align: baseline;
+  height: 45px;
+  border: none;
+  background-color: #374355;
+  color: #adb9ca;
+  border: 1px solid #53657d;
+  padding: 5px;
+}
+header input:focus, header button:focus {
+  color: #ff9947;
+}
+header button {
+  padding: 0px 10px;
+}
+header input[type=radio] {
+  margin-top: -1px;
+  margin-left: 10px;
+  vertical-align: middle;
+  width: 23px;
 }
 
 table.series {
@@ -16,32 +37,51 @@ table.series {
 
 table.studies {
   width: 100%;
-  width: 100%;
   empty-cells: show;
   border-collapse: collapse;
+}
+table.studies thead .search-block {
+  display: inline-flex;
+}
+table.studies thead .search-block input {
+  margin: auto 5px;
+  width: 100%;
+  color: #adb9ca;
+  border: none;
+  position: relative;
+  background-color: #1e2228;
+}
+table.studies thead .search-block input:focus + i.fa {
+  color: #ff9947;
+}
+table.studies thead .search-block input:focus {
+  border-bottom: 1px solid #ff9947;
 }
 table.studies .sub-border {
   width: 100%;
   padding: 8px;
   border-left: 1px solid #53657d;
   border-right: 1px solid #53657d;
+  padding: 0px 0px 0px 20px;
 }
 table.studies .sub-border .sub {
   display: inline-flex;
+  padding-left: 10px;
 }
 table.studies .sub-border .sub div {
-  padding: 10px 20px 10px 10px;
+  padding: 5px 20px 5px 10px;
   border: 1px solid #53657d;
 }
 table.studies .sub-border .sub div span {
   margin: 0px 10px 0px 10px;
 }
 table.studies .sub-border td {
+  padding: 0px;
   border: none;
   background-color: #2c3544;
 }
 table.studies .sub-border td .sub-td {
-  padding: 0px;
+  padding-left: 0px;
 }
 table.studies thead td {
   padding: 5px 0px 5px 0px;
@@ -49,7 +89,7 @@ table.studies thead td {
   border: 1px solid #53657d;
 }
 table.studies tbody td.main_td {
-  padding: 5px 5px 5px 10px;
+  padding: 2px 5px 2px 10px;
   border: 1px solid #53657d;
   background-color: #374355;
 }
@@ -62,27 +102,43 @@ table.studies tbody td.iin {
 table.studies tbody tr:hover {
   color: #ff9947;
 }
+table.studies tbody tr.open img.arrow {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
 table.studies tbody tr.sub td {
-  padding: 5px 5px 5px 10px;
   border: 1px solid #53657d;
   background-color: #2c3544;
 }
 
-div#info {
-  position: relative;
-  margin-top: 50px;
-  height: auto;
+footer#info {
+  margin: 5px;
+  height: 200px;
+  width: calc(100% - 138px);
+  position: absolute;
+  bottom: 10px;
 }
-div#info p {
+footer#info p {
   color: #adb9ca;
 }
-div#info .info-panel {
+footer#info div.info-block {
+  height: 200px;
+  text-align: center;
+  line-height: 200px;
+}
+footer#info .series {
+  border-right: 1px solid #53657d;
+}
+footer#info .info-panel {
   background-color: #374355;
   border: 1px solid #53657d;
   height: 100%;
   width: 100%;
 }
-div#info .info-panel p {
+footer#info .info-panel p {
   margin-bottom: 0px;
   padding-bottom: 0px;
 }
@@ -142,15 +198,6 @@ div#info .info-panel p {
 table.dataTable tr.sub-border {
   padding: 0px;
 }
-table.dataTable tr.sub-border td {
-  padding-left: 10px;
-}
-table.dataTable tr.sub-border:not(:first-child):not(:last-child) {
-  padding: 0px 10px 0px 10px;
-}
-table.dataTable tr.sub-border:last-child {
-  padding: 0px 10px 10px 10px;
-}
-table.dataTable tr.sub-border:first-child {
-  padding: 10px 10px 0px 10px;
+.content {
+  margin-top: 0px;
 }
