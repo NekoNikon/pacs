@@ -12,24 +12,24 @@ let getSiriesInfo = async (e) => {
     console.log(dataSeriesInfo);
 
     let html = "";
-    // html+="<div class='info-panel'>";
-    //     dataSeriesInfo.forEach(el => {
-    //         html+=`<p>Special character set -  ${el.specCharSet}</p>`;
-    //         html+=`<p>Image Type -  `;
-    //         el.imageType.forEach(sub=>{
-    //             html+=`${sub}, `;
-    //         });
-    //         html+="</p>";
-    //         html+=`<p>Instance Creation Date -  ${el.instanceDate}</p>`;
-    //         html+=`<p>Instance Creation Time -  ${el.instanceTime}</p>`;
-    //         html+=`<p>SOP Class UID -  ${el.SOPClass}</p>`;
-    //         html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
-    //         html+=`<p>Study Date-  ${el.studyDate}</p>`;
-    //         html+=`<p>Series Date -  ${el.seriesDate}</p>`;
-    //         // html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
-    //     });
-    // html+="</div>";  
-    // $('#info').html(html);
+    html+="<div class='info-panel'>";
+        dataSeriesInfo.forEach(el => {
+            html+=`<p>Special character set -  ${el.specCharSet}</p>`;
+            html+=`<p>Image Type -  `;
+            el.imageType.forEach(sub=>{
+                html+=`${sub}, `;
+            });
+            html+="</p>";
+            html+=`<p>Instance Creation Date -  ${el.instanceDate}</p>`;
+            html+=`<p>Instance Creation Time -  ${el.instanceTime}</p>`;
+            html+=`<p>SOP Class UID -  ${el.SOPClass}</p>`;
+            html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
+            html+=`<p>Study Date-  ${el.studyDate}</p>`;
+            html+=`<p>Series Date -  ${el.seriesDate}</p>`;
+            // html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
+        });
+    html+="</div>";  
+    $('#info').html(html);
 } 
 
 
@@ -98,8 +98,8 @@ let load = async function (){
                 previous: '<img src="src/icons/pagi_arrow_left.png">' // or '←' 
             }
         },
-        // scrollY: "200px",
-        // scrollCollapse: true,
+        // scrollY: "400px",
+        // scrollCollapse: false,
         bDestroy: true,
         bRetrieve: true,
         info: false,
@@ -145,3 +145,4 @@ let load = async function (){
 }
 
 window.onload = load();
+
