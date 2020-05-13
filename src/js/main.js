@@ -12,24 +12,24 @@ let getSiriesInfo = async (e) => {
     console.log(dataSeriesInfo);
 
     let html = "";
-    html+="<div class='info-panel'>";
-        dataSeriesInfo.forEach(el => {
-            html+=`<p>Special character set -  ${el.specCharSet}</p>`;
-            html+=`<p>Image Type -  `;
-            el.imageType.forEach(sub=>{
-                html+=`${sub}, `;
-            });
-            html+="</p>";
-            html+=`<p>Instance Creation Date -  ${el.instanceDate}</p>`;
-            html+=`<p>Instance Creation Time -  ${el.instanceTime}</p>`;
-            html+=`<p>SOP Class UID -  ${el.SOPClass}</p>`;
-            html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
-            html+=`<p>Study Date-  ${el.studyDate}</p>`;
-            html+=`<p>Series Date -  ${el.seriesDate}</p>`;
-            // html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
-        });
-    html+="</div>";  
-    $('#info').html(html);
+    // html+="<div class='card info-panel'>";
+    //     dataSeriesInfo.forEach(el => {
+    //         html+=`<p>Special character set -  ${el.specCharSet}</p>`;
+    //         html+=`<p>Image Type -  `;
+    //         el.imageType.forEach(sub=>{
+    //             html+=`${sub}, `;
+    //         });
+    //         html+="</p>";
+    //         html+=`<p>Instance Creation Date -  ${el.instanceDate}</p>`;
+    //         html+=`<p>Instance Creation Time -  ${el.instanceTime}</p>`;
+    //         html+=`<p>SOP Class UID -  ${el.SOPClass}</p>`;
+    //         html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
+    //         html+=`<p>Study Date-  ${el.studyDate}</p>`;
+    //         html+=`<p>Series Date -  ${el.seriesDate}</p>`;
+    //         // html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
+    //     });
+    // html+="</div>";  
+    // $('#info').html(html);
 } 
 
 
@@ -39,24 +39,50 @@ let loadSeries = async (e) => {
     console.log(id);
     let html="";
     if(!$(`tr[data-id="${id}"]`).hasClass('open')) {
+        //load series
         let getSiries = await fetch('./ajax/getSeries.php' , {method:'post',headers:{'Content-type' :  'application/x-www-form-urlencoded;charset=utf-8'} , body:'id='+id});
         let dataSeries = await getSiries.json();
-        console.log(dataSeries);
-        dataSeries.forEach(el => {
+        await dataSeries.forEach(async el => {
             html+=`<tr class='sub-border' data-seriesid=${el.ser} data-studiesid=${el.study}>`;
-            html+="<td class='sub-td' colspan=7>"
-            html+=`<div class="sub" data-id=${el.sop}>`;
-                html+=`<div>`;
-                    html+=`<span class='dots'><img src="src/icons/dots.png"></span>`
-                    html+=`<span class='download'><img src="src/icons/download.png"></span>${el.sop}</div>`;
-                html+=`<div>${el.cmean}</div>`;
-                html+=`<div>${el.mod}</div>`;
-                html+=`<div>${el.ser}</div>`;
-            html+="</div>";
-            html += "</td>";
+                html+="<td class='sub-td' colspan=7>"
+                    html+=`<div class="sub" data-id=${el.sop}>`;
+                        html+=`<div class="sop">`;
+                            html+=`<span class='dots'><img src="src/icons/dots.png"></span>`
+                            html+=`<span class='download'><img src="src/icons/download.png"></span>${el.sop}</div>`;
+                        html+=`<div class="cmean">${el.cmean}</div>`;
+                        html+=`<div class="mod">${el.mod}</div>`;
+                        html+=`<div class="ser">${el.ser}</div>`;
+                    html+="</div>";
+                html += "</td>";
             html += "</tr>";
+
+            console.log(`st=${el.ser}`);
+            
+            let getInfo = await fetch('./ajax/getSeriesInfo.php' , {
+                method:'post',
+                headers:{'Content-type':'application/x-www-form-urlencoded;charset=utf-8'},
+                body:`ser=${el.ser}&stu=${id}`
+            });
+            let dataSeriesInfo = await getInfo.json();
+            let seriesInfo = dataSeriesInfo[0];
+
+        //content type image/jpg !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //    console.log(seriesInfo);
+            
+
+            console.log(`stu=${seriesInfo.studyID}&ser=${seriesInfo.seriesID}&ins=${seriesInfo.SOPInstance}`);
+            
+            let getInstances = await fetch("./ajax/getPictures.php" ,{
+                method:'POST',
+                headers:{'Content-type' :  'application/x-www-form-urlencoded;charset=utf-8'},
+                body:`stu=${seriesInfo.studyID}&ser=${seriesInfo.seriesID}&ins=${seriesInfo.SOPInstance}`
+            });
+            let picture = await getInstances.json();
+            console.log(picture);
+             
         });
 
+        
     }
     $(`tr[data-id="${id}"]`).toggleClass('open');
     $(`tr[data-id="${id}"]`).after(html);
@@ -104,7 +130,7 @@ let load = async function (){
         bRetrieve: true,
         info: false,
         bLengthChange: false,
-        responsive: true, 
+        responsive: true,
 
     };
 
@@ -114,16 +140,15 @@ let load = async function (){
     $('table.studies thead td.search').each(function(i,e) {
         let title = $(this).text();
         $(this).html(`<div class="search-block clearable">
-            <input data-id='+i+' class="search noclick" type="search"  placeholder=${title}> 
+            <input data-id='+i+' class="search noclick" type="search"  placeholder=${title}>
             <i class="fa fa-search noclick"></i>
-        </div>`); 
-    })
+        </div>`);
+    });
 
     table.columns().every( function () {
         var that = this;
         var inputs = $("thead input");
-        $(document).delegate("thead input" ,'keyup change', function (e) { 
-             
+        $(document).delegate("thead input" ,'keyup change', function (e) {
             table.search($(e.currentTarget).val()).rows().draw();
         });
         $("thead .noclick").on('click' , function(e) {
@@ -134,14 +159,6 @@ let load = async function (){
  
     $(document).delegate('td.series' , 'click' , loadSeries);
     $(document).delegate('tr.sub-border' , 'click' , getSiriesInfo);
-
-    var panel="";
-    panel+=
-    `<div class='info-panel row'>
-        <div class="col-6 info-block series"><div class="noselect"><p>Серия не выбрана. Просмотр не доступен</p></div></div>
-        <div class="col-6 info-block picture"><div class="noselect"><p>Снимок не выбран. Просмотр не доступен</p><div></div>
-    </div>`;
-    $('#info').html(panel);
 }
 
 window.onload = load();

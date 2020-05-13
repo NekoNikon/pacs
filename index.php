@@ -25,38 +25,22 @@
                 </table>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Pictures</h4>
-                    </div>
-                    <div class="card-body">
-
-                    </div>
-                </div>
+    </div>
+    <div id="wrap-footer" class="row">
+        <div id="footer" class="col-lg-12">
+            <div id="info" class="card">
+                <div class='info-panel'>
+                    <div class="col-6 info-block series"><div class="noselect"><p>Серия не выбрана. Просмотр не доступен</p></div></div>
+                    <div class="col-6 info-block picture"><div class="noselect"><p>Снимок не выбран. Просмотр не доступен</p><div></div>
+                </div>   
             </div>
-            <!-- /# column -->
-
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Info series</h4>
-                    </div>
-                    <div class="card-body">
-
-                    </div>
-                </div>
-            </div>
-            <!-- /# column -->
         </div>
     </div>
     
-    
 
 
     
-    <div id="loader" class="loader"></div>
+    
     
 <?php
     require_once "partials/footer.php";

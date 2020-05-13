@@ -169,7 +169,7 @@ if(isset($_SERVER['PHP_AUTH_USER']) && ($_SERVER['PHP_AUTH_PW']==$password) && (
             
         </header><!-- /header -->
         <!-- Header-->
-        
+        <div id="loader" class="loader"></div>
         <div class="content mt-3">
 <?php
     if(!isset($_SESSION['user'])) {

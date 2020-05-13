@@ -85,6 +85,10 @@
             return $this->setRequest($service,"","get");
 
         }
+        public function getPicture($stu ,$ser,$ins) {
+            $service ="/dcm4chee-arc/aets/DCM4CHEE/wado?requestType=WADO&studyUID=".$stu."&seriesUID=".$ser."&objectUID=".$ins."&contentType=image/jpeg&frameNumber=1";
+            return $this->setRequest($service,"","get");
+        }
         public function getPatients($limit)
         {
             $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/patients/?includefield=all&offset=0&limit=20";
