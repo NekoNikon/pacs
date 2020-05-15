@@ -1,4 +1,13 @@
 
+function arrayBufferToBase64(buffer) {
+    var binary = '';
+    var bytes = [].slice.call(new Uint8Array(buffer));
+  
+    bytes.forEach((b) => binary += String.fromCharCode(b));
+  
+    return window.btoa(binary);
+};
+
 let getSiriesInfo = async (e) => {
     let seriesID = $(e.currentTarget).data('seriesid');
     let studiesID = $(e.currentTarget).data('studiesid');
@@ -12,24 +21,45 @@ let getSiriesInfo = async (e) => {
     console.log(dataSeriesInfo);
 
     let html = "";
-    // html+="<div class='card info-panel'>";
-    //     dataSeriesInfo.forEach(el => {
-    //         html+=`<p>Special character set -  ${el.specCharSet}</p>`;
-    //         html+=`<p>Image Type -  `;
-    //         el.imageType.forEach(sub=>{
-    //             html+=`${sub}, `;
-    //         });
-    //         html+="</p>";
-    //         html+=`<p>Instance Creation Date -  ${el.instanceDate}</p>`;
-    //         html+=`<p>Instance Creation Time -  ${el.instanceTime}</p>`;
-    //         html+=`<p>SOP Class UID -  ${el.SOPClass}</p>`;
-    //         html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
-    //         html+=`<p>Study Date-  ${el.studyDate}</p>`;
-    //         html+=`<p>Series Date -  ${el.seriesDate}</p>`;
-    //         // html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
-    //     });
-    // html+="</div>";  
-    // $('#info').html(html);
+    html+="<div class='info'>";
+        dataSeriesInfo.forEach(async el => {
+            html+=`<p>Special character set -  ${el.specCharSet}</p>`;
+            html+=`<p>Image Type -  `;
+            el.imageType.forEach(sub=>{
+                html+=`${sub}, `;
+            });
+            html+="</p>";
+            html+=`<p>Instance Creation Date -  ${el.instanceDate}</p>`;
+            html+=`<p>Instance Creation Time -  ${el.instanceTime}</p>`;
+            html+=`<p>SOP Class UID -  ${el.SOPClass}</p>`;
+            html+=`<p>SOP Instance UID -  ${el.SOPInstance}</p>`;
+            html+=`<p>Study Date-  ${el.studyDate}</p>`;
+            html+=`<p>Series Date -  ${el.seriesDate}</p>`;
+        });
+
+        let getPic = await fetch(`./ajax/getPictures.php?stu=${dataSeriesInfo[0].studyID}&ser=${dataSeriesInfo[0].seriesID}&ins=${dataSeriesInfo[0].SOPInstance}` ,{
+            method:'GET',
+            headers:{
+                'Content-Type': 'application/dicom',
+                'Accept': 'application/dicom+json',
+            }
+        });
+
+        let dataPic = await getPic.text();
+        
+        let img = new Image(200,200);
+        img.src = `data:image/jpeg;base64,${dataPic.replace('\r\n' , '')}`;
+
+
+
+    html+="</div>";   
+    
+
+    html+="<div class='pic'>";
+        // html+=img;
+    html+="</div>";
+    $('#info .info-panel .picture').html(html);
+    $('#info .info-panel .picture .pic').html(img);
 } 
 
 
@@ -38,6 +68,7 @@ let loadSeries = async (e) => {
     $('.sub-border').remove();
     console.log(id);
     let html="";
+    $('.info-panel .series').html('')
     if(!$(`tr[data-id="${id}"]`).hasClass('open')) {
         //load series
         let getSiries = await fetch('./ajax/getSeries.php' , {method:'post',headers:{'Content-type' :  'application/x-www-form-urlencoded;charset=utf-8'} , body:'id='+id});
@@ -60,26 +91,31 @@ let loadSeries = async (e) => {
             
             let getInfo = await fetch('./ajax/getSeriesInfo.php' , {
                 method:'post',
-                headers:{'Content-type':'application/x-www-form-urlencoded;charset=utf-8'},
+                headers:{'Content-type':'application/x-www-form-urlencoded'},
                 body:`ser=${el.ser}&stu=${id}`
             });
             let dataSeriesInfo = await getInfo.json();
             let seriesInfo = dataSeriesInfo[0];
-
-        //content type image/jpg !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //    console.log(seriesInfo);
             
-
+           
             console.log(`stu=${seriesInfo.studyID}&ser=${seriesInfo.seriesID}&ins=${seriesInfo.SOPInstance}`);
+            // let params  = {"stu":seriesInfo.studyID,"ser":seriesInfo.seriesID, "ins":seriesInfo.SOPInstance};
+            var base64Flag = 'data:image/jpeg;base64,';
             
-            let getInstances = await fetch("./ajax/getPictures.php" ,{
-                method:'POST',
-                headers:{'Content-type' :  'application/x-www-form-urlencoded;charset=utf-8'},
-                body:`stu=${seriesInfo.studyID}&ser=${seriesInfo.seriesID}&ins=${seriesInfo.SOPInstance}`
+            let getInstances = await fetch(`./ajax/getPictures.php?stu=${seriesInfo.studyID}&ser=${seriesInfo.seriesID}&ins=${seriesInfo.SOPInstance}` ,{ 
+                method:'GET',
+                headers:{
+                    'Content-Type': 'application/dicom',
+                    'Accept': 'application/dicom+json',
+                },
             });
-            let picture = await getInstances.json();
-            console.log(picture);
-             
+            let picture = await getInstances.text();
+
+            let img = new Image(120,120);
+            
+            img.src = `data:image/jpeg;base64,${picture.replace('\r\n' , '')}`;
+            $('.info-panel .series').append(`<div data-instance='${seriesInfo.SOPInstance}' class="pic-block"></div>`)
+            $(`.info-panel .series .pic-block[data-instance='${seriesInfo.SOPInstance}']`).html(img);
         });
 
         
@@ -124,8 +160,6 @@ let load = async function (){
                 previous: '<img src="src/icons/pagi_arrow_left.png">' // or '←' 
             }
         },
-        // scrollY: "400px",
-        // scrollCollapse: false,
         bDestroy: true,
         bRetrieve: true,
         info: false,
@@ -140,7 +174,7 @@ let load = async function (){
     $('table.studies thead td.search').each(function(i,e) {
         let title = $(this).text();
         $(this).html(`<div class="search-block clearable">
-            <input data-id='+i+' class="search noclick" type="search"  placeholder=${title}>
+            <input data-id='+i+' class="search noclick" type="search"  placeholder='${title}'>
             <i class="fa fa-search noclick"></i>
         </div>`);
     });

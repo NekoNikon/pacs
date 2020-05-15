@@ -14,9 +14,9 @@
                 $row-> fio = $el->{'00100010'}->Value[0]->Alphabetic;
                 $row-> suid = $sub->{'0020000D'}->Value[0];
                 $row-> sex = $el->{'00100040'}->Value[0];
-                $row-> btd = $el->{'00100030'}->Value[0];
-                $row-> sdate = $sub->{'00080020'}->Value[0];
-                $row-> stime= $sub->{'00080030'}->Value[0];
+                $row-> btd = $server->prettyDate($el->{'00100030'}->Value[0], '/');
+                $row-> sdate = $server->prettyDate($sub->{'00080020'}->Value[0],'/');
+                $row-> stime=  $server->prettyTime($sub->{'00080030'}->Value[0],':');
                 $row-> des = $sub->{'00081030'}->Value[0];
                 $row-> src = $src->{'00080080'}->Value[0];
                 array_push($data,$row);

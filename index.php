@@ -30,7 +30,7 @@
         <div id="footer" class="col-lg-12">
             <div id="info" class="card">
                 <div class='info-panel'>
-                    <div class="col-6 info-block series"><div class="noselect"><p>Серия не выбрана. Просмотр не доступен</p></div></div>
+                    <div class="col-6 info-block series pic-flex"><div class="noselect"><p>Серия не выбрана. Просмотр не доступен</p></div></div>
                     <div class="col-6 info-block picture"><div class="noselect"><p>Снимок не выбран. Просмотр не доступен</p><div></div>
                 </div>   
             </div>

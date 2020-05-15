@@ -43,20 +43,96 @@
                     # code...
                     break;
             }
-            // $date=http_build_query($post_params);
             curl_setopt($ch1, CURLOPT_SSL_VERIFYHOST, false );
             curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false );
             curl_setopt($ch1, CURLOPT_HTTPHEADER, array(
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . $_SESSION['token']
             ));       
-            // curl_setopt($ch1, CURLOPT_USERPWD, $this->config['login'] . ":" . $this->config['pass']);
             curl_setopt($ch1, CURLOPT_URL, $this->config['host'].":".$this->config['port'].$service);       
             curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
             $response = curl_exec( $ch1 );
             curl_close( $ch1 );
             $response=json_decode($response);
             return $response;
+        }
+
+        public function setRequestPic($service , $post_params=array() , $method)
+        {
+            $ch1 = curl_init($this->config['host']);
+            if($post_params && count($post_params)){
+                $post_params = json_encode($post_params);
+                $post_params = str_replace("u0022", "\"", $post_params);
+                $post_params = str_replace("u0027", "\'", $post_params);
+            }
+            switch ($method) {
+                case 'post':
+                    curl_setopt($ch1, CURLOPT_POST, true);
+                    curl_setopt($ch1, CURLOPT_POSTFIELDS, $post_params);
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+            curl_setopt($ch1, CURLOPT_SSL_VERIFYHOST, false );
+            curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false );
+            curl_setopt($ch1, CURLOPT_HTTPHEADER, array(
+                //content type - image/png (base64) download
+                'Authorization: Bearer ' . $_SESSION['token']
+            ));       
+            curl_setopt($ch1, CURLOPT_URL, $this->config['host'].":".$this->config['port'].$service);       
+            curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec( $ch1 );
+            curl_close( $ch1 );
+            $response=$response;
+            $res =base64_encode($response);
+            return $res;
+        }
+        public function prettyDate($str = null,$sep = null)	{
+            if ($str) {
+                $year = $str[0]. $str[1]. $str[2]. $str[3];
+                $month = $str[4].$str[5];
+                $day = $str[6].$str[7];
+                return $day.$sep.$month.$sep.$year;
+            }
+            else {
+                return "";
+            }
+        }
+        public function prettyTime($str=null,$sep=null) {
+            $h = $str[0]. $str[1];
+            $m = $str[2]. $str[3];
+            $s = $str[4]. $str[5];
+            return $h.$sep.$m.$sep.$s;
+        }
+
+        public function save($study , $series , $obj) {
+		
+            $token = $this->SetToken();
+            $ch1 = curl_init($this->config['host']);    
+            curl_setopt($ch1, CURLOPT_SSL_VERIFYHOST, false );
+            curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false );
+            curl_setopt($ch1, CURLOPT_HTTPHEADER, array(
+                'Accept: multipart/related;type=application/dicom', 
+                // 'Content-Type: application/dicom',
+                'Authorization: Bearer ' . $token->access_token
+            ));       
+            curl_setopt($ch1, CURLOPT_ENCODING, 'UTF-8');
+            // curl_setopt($ch1, CURLOPT_USERPWD, $this->config['login'] . ":" . $this->config['pass']);
+            curl_setopt($ch1, CURLOPT_URL, "http://".$this->config['host'].":8080/dcm4chee-arc/aets/DCM4CHEE/rs/studies/".$study."/series/".$series."/instances/".$obj."");       
+            curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec( $ch1 );
+            $fd = fopen("../files/".$study.".dcm", 'w') or die("не удалось создать файл");
+            fwrite($fd, $response);
+            fclose($fd);
+    
+            $file_ot = file("../files/".$study.".dcm");
+            $file = array_splice($file_ot,4);
+            file_put_contents("../files/".$study.".dcm" , implode("" , $file));
+            
+            curl_close( $ch1 );
+            return "/files/".$study.".dcm";
+            // header("location: /download.php?file=".str_replace("." , "" , $study).".dcm");
         }
 
         public function getSeries($sid)
@@ -86,8 +162,8 @@
 
         }
         public function getPicture($stu ,$ser,$ins) {
-            $service ="/dcm4chee-arc/aets/DCM4CHEE/wado?requestType=WADO&studyUID=".$stu."&seriesUID=".$ser."&objectUID=".$ins."&contentType=image/jpeg&frameNumber=1";
-            return $this->setRequest($service,"","get");
+            $service ="/dcm4chee-arc/aets/DCM4CHEE/wado?requestType=WADO&studyUID=".$stu."&serieUID=".$ser."&objectUID=".$ins;
+            return $this->setRequestPic($service,"","get");
         }
         public function getPatients($limit)
         {

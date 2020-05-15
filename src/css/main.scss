@@ -53,7 +53,7 @@
                 }
             }
             .animated {
-                min-height: calc(100vh - 346px);
+                min-height: calc(100vh - 396px);
             }
             table.series {
                 
@@ -71,7 +71,7 @@
                             margin: auto 5px;
                             width: 100%;
                             color: $font-color;
-                            border:none;
+                             border:none;
                             position: relative;
 
                             background-color:$main-color;
@@ -193,17 +193,32 @@
                             color: $font-color; 
                         }
                         div.info-block {
-                            height: 200px;
-                            text-align: center;
-                            line-height: 200px;
+                            height: 220px;
+                            div.noselect {
+                                text-align: center;
+                                line-height: 220px;
+                            }
+                            
                         }
                         .series {
+                            &.pic-flex {
+                                display: flex;
+                            }
                             border-right: 1px solid $border-color;
+                            div.pic-block {
+                                margin-right: 10px;
+                            }
                         }
                         
+                        .picture {
+                            // text-align: right;
+                            display: flex;
+                        }
                         .info-panel {
                             background-color: $base-color;
                             border:1px solid $border-color;
+                            padding-top: 10px;
+                            padding-bottom: 10px;
                             height: 100%;
                             p {
                                 margin-bottom: 0px;
