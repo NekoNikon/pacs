@@ -1,4 +1,11 @@
 <?php 
+    function tohttp( $query ){
+        $query_array = array();
+        foreach( $query as $key => $key_value ){
+            $query_array[] = urlencode( $key ) . '=' . urlencode( $key_value );
+        }
+        return implode( '&', $query_array );
+    }
     class DCM4CHEEAPI {
         protected $config;
 
@@ -39,6 +46,10 @@
                     curl_setopt($ch1, CURLOPT_POST, true);
                     curl_setopt($ch1, CURLOPT_POSTFIELDS, $post_params);
                     break;
+                // case 'get':
+                //     curl_setopt($ch1, CURLOPT_POST, false);
+                //     curl_setopt($ch1, CURLOPT_POSTFIELDS, $post_params);
+                //     break;
                 default:
                     # code...
                     break;
@@ -88,6 +99,36 @@
             $res =base64_encode($response);
             return $res;
         }
+
+        public function download($study=null , $series=null) {
+            $token = $this->SetToken();
+            $ch1 = curl_init($this->config['host']);    
+            
+            // $date=http_build_query($post_params);
+            curl_setopt($ch1, CURLOPT_SSL_VERIFYHOST, false );
+            curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false );
+            curl_setopt($ch1, CURLOPT_HTTPHEADER, array(
+                // 'Accept: multipart/related;type=application/dicom', 
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $token->access_token
+            ));       
+            curl_setopt($ch1, CURLOPT_ENCODING, 'UTF-8');
+            curl_setopt($ch1, CURLOPT_URL, $this->config['host'].":8080/dcm4chee-arc/aets/DCM4CHEE/rs/studies/".$study."/series/".$series."?accept=application/zip");       
+            curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec( $ch1 );
+            // return $response;
+            $fd = fopen("../files/".$study.".zip", 'w') or die("не удалось создать файл");
+            fwrite($fd, $response);
+            fclose($fd);
+
+            // $file_ot = file("../files/".$study.".dcm");
+            // $file = array_splice($file_ot,4);
+            // file_put_contents("../files/".$study.".dcm" , implode("" , $file));
+            
+            curl_close( $ch1 );
+            return "/files/".$study.".zip";
+        }
+
         public function prettyDate($str = null,$sep = null)	{
             if ($str) {
                 $year = $str[0]. $str[1]. $str[2]. $str[3];
@@ -150,9 +191,14 @@
             $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/".$var."/instances?includefield=all&limit=1";
             return $this->setRequest($service,"","get");
         }
-        public function getStudies($iin)
+        public function getStudies($param="")
         {
-            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/?includefield=all&PatientID=".$iin."";
+            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/?includefield=all&offset=0&". tohttp($param);
+            return $this->setRequest($service,"","get");
+        }
+        public function getStudiesCount($param = "")
+        {
+            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/count?includefield=all&offset=0&". tohttp($param);
             return $this->setRequest($service,"","get");
         }
         public function getStudiesInstaces($studyID = null)
@@ -165,40 +211,48 @@
             $service ="/dcm4chee-arc/aets/DCM4CHEE/wado?requestType=WADO&studyUID=".$stu."&serieUID=".$ser."&objectUID=".$ins;
             return $this->setRequestPic($service,"","get");
         }
-        public function getPatients($limit)
+        public function getPatients($req="")
         {
-            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/patients/?includefield=all&offset=0&limit=20";
-            return $this->setRequest($service,"","get");
+            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/patients/?includefield=all&".$req;
+            return $this->setRequest($service,$req,"get");
         }
         public function getInstances($instanceID = null)
         {
             $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/instances/".$instanceID."?InstitutionName=*";
             return $this->setRequest($service,"","get");
         }
+        public function test($param="")
+        {
+            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/?includefield=all&".$param;
+            return $this->setRequest($service,"","get");
+        }
         public function getQueryFromFilter($filter) {
             $fio="*";$iin="*";$StudyDate="*";$patientBDate="*";
-            $AET="*";
-            if(isset($filter['studyDate']) && $filter['studyDate']) {
-                $StudyDate=$this->getOrthankDate($filter['studyDate']);
+            $limit = "*";
+            $AET="*";$instName="*";
+
+            $params_array = (object)array();
+            if(isset($filter['StudyDate']) && $filter['StudyDate']) {
+                $StudyDate=str_replace("StudyDate=" , "",$filter['StudyDate']);
+                $params_array->StudyDate = $StudyDate;
             }
             if(isset($filter['InstitutionName'])) {
                 $instName = $filter['InstitutionName'];
             }
             if(isset($filter['iin'])){
                 $iin = $filter['iin'];
-              }
-              if(isset($filter['FIO'])){
+            }
+            if(isset($filter['limit'])){
+                $limit = str_replace("limit=" , "",$filter['limit']);
+                $params_array->limit = $limit;
+            }
+            if(isset($filter['FIO'])){
                 $fio = $filter['FIO'];
-              }
-              if(isset($filter['patientBDate']) && $filter['patientBDate']){
-                $patientBDate = $this->getOrthankDate($filter['patientBDate']);
-              }
-              return array('PatientID'=>$iin,
-                           'StudyDate'=>$StudyDate,
-                           'PatientName'=>$fio."*",
-                           'PatientBirthDate'=>$patientBDate,
-                           'InstitutionName'=>$instName
-                        );
+            }
+            if(isset($filter['patientBDate']) && $filter['patientBDate']){
+                $patientBDate = $filter['patientBDate'];
+            }
+            return $params_array;
         }
     }
 

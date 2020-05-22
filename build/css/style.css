@@ -6,7 +6,7 @@
 header {
   height: 90px !important; }
   header input, header button {
-    vertical-align: baseline;
+    vertical-align: middle;
     height: 45px;
     border: none;
     background-color: #374355;
@@ -20,6 +20,8 @@ header {
   header button {
     border: none;
     padding: 0px 15px; }
+    header button#search {
+      border: 1px solid #53657d; }
   header input[type=radio] {
     margin-top: -1px;
     margin-left: 10px;
@@ -44,7 +46,7 @@ header {
       display: block; }
 
 .animated {
-  min-height: calc(100vh - 346px); }
+  min-height: calc(100vh - 506px); }
 
 table.series {
   empty-cells: show;
@@ -56,6 +58,7 @@ table.studies {
   empty-cells: show;
   border-collapse: collapse; }
   table.studies thead .search-block {
+    width: 100%;
     display: inline-flex; }
     table.studies thead .search-block input {
       margin: auto 5px;
@@ -127,26 +130,44 @@ table.studies {
   #wrap-footer #footer {
     width: 100%; }
     #wrap-footer #footer #info.card {
-      border: none; }
+      border: none;
+      margin-bottom: 0rem; }
     #wrap-footer #footer #info p {
       color: #adb9ca; }
     #wrap-footer #footer #info div.info-block {
-      height: 200px;
-      text-align: center;
-      line-height: 200px; }
+      height: 330px; }
+      #wrap-footer #footer #info div.info-block div.noselect {
+        text-align: center;
+        line-height: 330px; }
     #wrap-footer #footer #info .series {
+      position: relative;
       border-right: 1px solid #53657d; }
+      #wrap-footer #footer #info .series.pic-flex {
+        display: flex; }
+      #wrap-footer #footer #info .series div.pic-block {
+        margin-right: 10px; }
+    #wrap-footer #footer #info .picture {
+      position: relative;
+      display: flex; }
+      #wrap-footer #footer #info .picture .pic {
+        margin-left: auto; }
     #wrap-footer #footer #info .info-panel {
       background-color: #374355;
       border: 1px solid #53657d;
+      padding-top: 10px;
+      padding-bottom: 10px;
       height: 100%;
       width: 100%; }
       #wrap-footer #footer #info .info-panel p {
         margin-bottom: 0px;
-        padding-bottom: 0px; }
+        padding-bottom: 5px;
+        font-size: 10pt; }
+      #wrap-footer #footer #info .info-panel .p-h5 {
+        font-size: 14pt; }
 
 .loader {
   position: absolute;
+  z-index: 1000;
   bottom: 50%;
   left: 50%;
   border: 16px solid #adb9ca;
@@ -163,29 +184,70 @@ table.studies {
     transform: rotate(0deg); }
   100% {
     transform: rotate(360deg); } }
+.loader-series {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  border: 8px solid #adb9ca;
+  /* Light grey */
+  border-top: 8px solid #374355;
+  /* Blue */
+  border-radius: 50%;
+  width: 90px;
+  height: 90px;
+  animation: spin 2s linear infinite; }
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
+.loader-pic {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  border: 8px solid #adb9ca;
+  /* Light grey */
+  border-top: 8px solid #374355;
+  /* Blue */
+  border-radius: 50%;
+  width: 90px;
+  height: 90px;
+  animation: spin 2s linear infinite; }
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
 .dataTables_paginate {
   margin-top: 20px !important;
   display: inline-block; }
   .dataTables_paginate a.paginate_button.next, .dataTables_paginate a.paginate_button.previous {
     color: #adb9ca;
-    border: 1px solid #53657d;
     float: left;
     padding: 8px 16px;
     text-decoration: none;
     background-color: #374355;
     margin-right: 2.5px; }
-  .dataTables_paginate span a {
+  .dataTables_paginate span a.paginate_button {
     color: #adb9ca;
-    border: 1px solid #53657d;
     float: left;
     padding: 8px 16px;
     text-decoration: none;
     background-color: #374355;
     margin-right: 2.5px; }
-  .dataTables_paginate span a.current {
+  .dataTables_paginate span span.ellipsis {
+    color: #adb9ca;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    background-color: #374355;
+    margin-right: 2.5px; }
+  .dataTables_paginate span a.paginate_button.current {
     background-color: #374355;
     color: #ff9947; }
-  .dataTables_paginate span:hover a {
+  .dataTables_paginate span a:hover:not(.current) {
     background-color: #374355;
     color: #ff9947; }
 
@@ -193,7 +255,7 @@ table.dataTable tr.sub-border {
   padding: 0px; }
 
 ::placeholder {
-  color: #adb9ca;
+  color: #8493a8;
   opacity: 1;
   /* Firefox */ }
 

@@ -9,6 +9,13 @@ if(isset($_SERVER['PHP_AUTH_USER']) && ($_SERVER['PHP_AUTH_PW']==$password) && (
     header('HTTP/1.0 401 Unauthorized');
     echo 'Authenticate required!';
 }
+
+function getAgo($n = 0)
+{
+    $dateNow = (new \DateTime())->format('Y-m-d');
+    return str_replace("-" , ""  , date('Y-m-d', strtotime("-".$n." days", strtotime($dateNow))));
+}
+
 ?>
 
 <!doctype html>
@@ -77,97 +84,7 @@ if(isset($_SERVER['PHP_AUTH_USER']) && ($_SERVER['PHP_AUTH_PW']==$password) && (
     <div id="right-panel" class="right-panel">
 
         <!-- Header-->
-        <header id="header" class="row header">
-            <div class="left col-7">
-                <input id="dateOfStudy" type="text" placeholder="Дата исследования">
-                <input type="radio" name="times" value="today" id="today" >
-                <label for="today">Сегодня</label>
-                <input type="radio" name="times" value="sevenday" id="sevenday">
-                <label for="sevenday">7Д</label>
-                <input type="radio" name="times" value="month" id="month">
-                <label for="month">1М</label>
-                <input type="radio" name="times" value="year" id="year">
-                <label for="year">1Г</label>
-                <input type="radio" name="times" value="any" id="any">
-                <label for="any">Любая дата</label>
-                <button ><i class="fa fa-search"></i></button>
-            </div>
-            <div class="col-5 right">
-                <div class="float-right">
-                <label class="container-checkbox">Все
-                    <input type="checkbox" checked="checked">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="container-checkbox">CR
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="container-checkbox">CT
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="container-checkbox">DX
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-                </label>
-                <!-- <div class="dropdown all-modality"> -->
-                <label class="all-modality">
-                    <div class="dropdown">
-                        <button class="dropbtn fa fa-ellipsis-v"></button>
-                        <div id="droplist" class="dropdown-content">
-                            <div class="col-6">
-                                <label for="">Modality</label>
-                            </div>
-                            <div class="col-6">
-                                <label class="float-right dropup" onclick="close()" for=""><i class="fa fa-chevron-up" aria-hidden="true"></i></label><br>
-                            </div>
-                            <div class="col-6">
-                                <label class="container-checkbox">CR
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="container-checkbox">CT
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>    
-                                <label class="container-checkbox">DX
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="container-checkbox">ET
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="col-6">
-                                <label class="container-checkbox">NI
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="container-checkbox">KO
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>    
-                                <label class="container-checkbox">NN
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="container-checkbox">EE
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            
-                            
-                        </div>
-                    </div> 
-                </label>
-                <!-- </div> -->
-                
-                </div>
-            </div>
-            
-        </header><!-- /header -->
+        
         <!-- Header-->
         <div id="loader" class="loader"></div>
         <div class="content mt-3">

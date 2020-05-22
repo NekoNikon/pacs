@@ -23,12 +23,12 @@
             array_push($row->imageType , $sub);
         }
 
-        $row->instanceDate = $el->{'00080012'}->Value[0];
-        $row->instanceTime = $el->{'00080013'}->Value[0];
+        $row->instanceDate = $server->prettyDate($el->{'00080012'}->Value[0],'-');
+        $row->instanceTime = $server->prettyTime($el->{'00080013'}->Value[0],':');
         $row->SOPClass     = $el->{'00080016'}->Value[0];
         $row->SOPInstance  = $el->{'00080018'}->Value[0];
-        $row->studyDate    = $el->{'00080020'}->Value[0];
-        $row->seriesDate   = $el->{'00080021'}->Value[0];
+        $row->studyDate    = $server->prettyDate($el->{'00080020'}->Value[0],'-');
+        $row->seriesDate   = $server->prettyDate($el->{'00080021'}->Value[0],'-');
         $row->seriesID     = $el->{'0020000E'}->Value[0];
         $row->studyID      = $el->{'0020000D'}->Value[0];
         array_push($data,$row);
