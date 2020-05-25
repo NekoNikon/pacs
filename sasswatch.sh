@@ -1,1 +1,1 @@
-sass --no-source-map --watch  src/css/main.scss build/css/style.css
+sass --watch src/css/main.scss:build/css/style.css

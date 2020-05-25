@@ -1,0 +1,1 @@
+babel --watch src/js/main.js --out-file build/js/main.js
