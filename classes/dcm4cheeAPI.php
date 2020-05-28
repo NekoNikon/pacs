@@ -193,7 +193,7 @@
         }
         public function getStudies($param="")
         {
-            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/?includefield=all&offset=0&". tohttp($param);
+            $service = "/dcm4chee-arc/aets/DCM4CHEE/rs/studies/?includefield=all&offset=0&". tohttp($param); //77771029 - size of study
             return $this->setRequest($service,"","get");
         }
         public function getStudiesCount($param = "")

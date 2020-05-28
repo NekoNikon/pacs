@@ -1,20 +1,30 @@
 <?php
-$login = "admin";
-$password = "!234";
-if(isset($_SERVER['PHP_AUTH_USER']) && ($_SERVER['PHP_AUTH_PW']==$password) && (strtolower($_SERVER['PHP_AUTH_USER'])==$login)){
-    // авторизован успешно
-} else {
-    // если ошибка при авторизации, выводим соответствующие заголовки и сообщение
-    header('WWW-Authenticate: Basic realm="Backend"');
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'Authenticate required!';
+ob_start();
+session_start();
+if(isset($_SESSION['user'])) {
+
 }
+else {
+    header('location: ./login.php');
+}
+// $login = "admin";
+// $password = "ddS9Ej";
+// if(isset($_SERVER['PHP_AUTH_USER']) && ($_SERVER['PHP_AUTH_PW']==$password) && (strtolower($_SERVER['PHP_AUTH_USER'])==$login)){
+//     // авторизован успешно
+// } else {
+//     // если ошибка при авторизации, выводим соответствующие заголовки и сообщение
+//     header('WWW-Authenticate: Basic realm="Backend"');
+//     header('HTTP/1.0 401 Unauthorized');
+//     echo 'Authenticate required!';
+// }
 
 function getAgo($n = 0)
 {
     $dateNow = (new \DateTime())->format('Y-m-d');
     return str_replace("-" , ""  , date('Y-m-d', strtotime("-".$n." days", strtotime($dateNow))));
 }
+
+
 
 ?>
 
@@ -44,7 +54,6 @@ function getAgo($n = 0)
     <link rel="stylesheet" href="vendors/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="vendors/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="assets/css/bootstrap-datepicker.css">
-    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"> -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="build/css/style.css">
 
@@ -71,6 +80,9 @@ function getAgo($n = 0)
                     </li>
                     <li class="menu-title"> 
                         <a href="#"><img src="src/icons/report.png" alt=""><p>Отчет</p></a>
+                    </li>
+                    <li class="menu-title"> 
+                        <a href="/logout.php"><i class="fa fa-sign-out fa-3x"></i><p>Выйти</p></a>
                     </li>
                 </ul>
             </div>

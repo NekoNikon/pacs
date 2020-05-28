@@ -1,10 +1,6 @@
 <?php
     include_once "config.php";
     require_once "partials/header.php";
-    // $res = $server->getPatients();
-    // echo "<pre>";
-    // print_r($res[0]);
-    // echo "</pre>";
 ?>  
 <header id="header" class="row header">
     <div class="left col-7">
@@ -164,7 +160,7 @@
         <div id="footer" class="col-lg-12">
             <div id="info" class="card">
                 <div class='info-panel'>
-                    <div class="col-6 info-block series pic-flex"><div class="noselect"><p>Серия не выбрана. Просмотр не доступен</p></div></div>
+                    <div class="col-6 info-block series no-pic"><div class="noselect"><p>Серия не выбрана. Просмотр не доступен</p></div></div>
                     <div class="col-6 info-block picture"><div class="noselect"><p>Снимок не выбран. Просмотр не доступен</p><div></div>
                 </div>   
             </div>

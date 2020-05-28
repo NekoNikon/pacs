@@ -1,10 +1,7 @@
-
-
 let download = async (e) => {
     let st = $(e.currentTarget).data('st');
     let ser = $(e.currentTarget).data('ser');
     // let ins = $(e.currentTarget).data('ins');
-
     let getDownload = await fetch("./ajax/download.php" , {
         method:'post',
         headers:{'Content-type' :  'application/x-www-form-urlencoded;charset=utf-8'},
@@ -21,7 +18,7 @@ let getSiriesInfo = async (e) => {
     $('#info .info-panel .picture').html('<div id="loader-pic" class="loader-pic"></div>');
     let seriesID = $(e.currentTarget).data('seriesid');
     let studiesID = $(e.currentTarget).data('studiesid');
-
+    // $(`.sub-border[data-seriesid=${seriesID}]`).addClass('get')
     let getInfo = await fetch('./ajax/getSeriesInfo.php' , {
         method:'post',
         headers:{'Content-type' :  'application/x-www-form-urlencoded;charset=utf-8'},
@@ -32,40 +29,35 @@ let getSiriesInfo = async (e) => {
 
     let html = "";
     html+="<div class='info'>";
-        dataSeriesInfo.forEach(async el => {
-            html+=`<p class="p-h5">${el.SOPInstance}</p>`;
-            html+=`<p>Special character set (0008,0005)  -  ${el.specCharSet}</p>`;
-            html+=`<p>Image Type (0008,0008)  -  `;
-            el.imageType.forEach(sub=>{
-                html+=`${sub}, `;
-            });
-            html+="</p>";
-            html+=`<p>Instance Creation Date (0008,0012)  -   ${el.instanceDate}</p>`;
-            html+=`<p>Instance Creation Time (0008,0013)  -  ${el.instanceTime}</p>`;
-            html+=`<p>SOP Class UID (0008,0016)  -  ${el.SOPClass}</p>`;
-            html+=`<p>SOP Instance UID (0008,0018)  -  ${el.SOPInstance}</p>`;
-            html+=`<p>Study Date (0008,0020)  -  ${el.studyDate}</p>`;
-            html+=`<p>Series Date (0008,0021)  -  ${el.seriesDate}</p>`;
+    dataSeriesInfo.forEach(async el => {
+        html+=`<p class="p-h5">${el.SOPInstance}</p>`;
+        html+=`<p>Special character set (0008,0005)  -  ${el.specCharSet}</p>`;
+        html+=`<p>Image Type (0008,0008)  -  `;
+        el.imageType.forEach(sub=>{
+            html+=`${sub}, `;
         });
+        html+="</p>";
+        html+=`<p>Instance Creation Date (0008,0012)  -   ${el.instanceDate}</p>`;
+        html+=`<p>Instance Creation Time (0008,0013)  -  ${el.instanceTime}</p>`;
+        html+=`<p>SOP Class UID (0008,0016)  -  ${el.SOPClass}</p>`;
+        html+=`<p>SOP Instance UID (0008,0018)  -  ${el.SOPInstance}</p>`;
+        html+=`<p>Study Date (0008,0020)  -  ${el.studyDate}</p>`;
+        html+=`<p>Series Date (0008,0021)  -  ${el.seriesDate}</p>`;
+    });
 
-        let getPic = await fetch(`./ajax/getPictures.php?stu=${dataSeriesInfo[0].studyID}&ser=${dataSeriesInfo[0].seriesID}&ins=${dataSeriesInfo[0].SOPInstance}` ,{
-            method:'GET',
-            headers:{
-                'Content-Type': 'application/dicom',
-                'Accept': 'application/dicom+json',
-            }
-        });
+    let getPic = await fetch(`./ajax/getPictures.php?stu=${dataSeriesInfo[0].studyID}&ser=${dataSeriesInfo[0].seriesID}&ins=${dataSeriesInfo[0].SOPInstance}` ,{
+        method:'GET',
+        headers:{
+            'Content-Type': 'application/dicom',
+            'Accept': 'application/dicom+json',
+        }
+    });
 
-        let dataPic = await getPic.text();
-        
-        let img = new Image(320,240);
-        img.src = `data:image/jpeg;base64,${dataPic.replace('\r\n' , '')}`;
-
-
-
-    html+="</div>";   
+    let dataPic = await getPic.text(); 
     
-
+    let img = new Image(320 ,240);
+    img.src = `data:image/jpeg;base64,${dataPic.replace('\r\n' , '')}`;
+    html+="</div>";   
     html+="<div class='pic'>";
     html+="</div>";
     $('#info .info-panel .picture').html(html);
@@ -86,9 +78,10 @@ let options = {
             previous: '<img src="src/icons/pagi_arrow_left.png">' // or '←' 
         }
     },
-    // scrollY: "500px",
-    // scrollCollapse: true,
-    pageLength:15,
+    scrollY: "500px",
+    scrollCollapse: true,
+    paging:  false,
+    pageLength:15, 
     paging: true,
     bDestroy: true,
     bRetrieve: true,
@@ -108,7 +101,7 @@ let loadSeries = async (e) => {
     $('.sub-border').remove();
     console.log(id);
     let html="";
-    $('.info-panel .series').html('<div class="noselect"><p>Серия не выбрана. Просмотр не доступен</p></div>');
+    $('.info-panel .series').html('<div class="noselect"><p>Серия не выбрана. Просмотр не доступен</p></div>').addClass('no-pic').removeClass('pic-flex');
     $('#info .info-panel .picture').html('<div class="noselect"><p>Снимок не выбран. Просмотр не доступен</p><div>');
     if(!$(`tr[data-id="${id}"]`).hasClass('open')) {
         $(`tr.table-row`).removeClass('open');
@@ -156,6 +149,7 @@ let loadSeries = async (e) => {
             let img = new Image(150,130);
             
             img.src = `data:image/jpeg;base64,${picture.replace('\r\n' , '')}`;
+            $('.info-panel .series').removeClass('no-pic').addClass('pic-flex');
             $('.info-panel .series').append(`<div data-instance='${seriesInfo.SOPInstance}' data-seriesid='${el.ser}' data-studiesid='${el.study}' class="pic-block"></div>`)
             $(`.info-panel .series .pic-block[data-instance='${seriesInfo.SOPInstance}']`).html(img);
             $(`.info-panel .series .pic-block[data-instance='${seriesInfo.SOPInstance}']`).append(`<p>${el.cmean}</p>`);
@@ -277,13 +271,13 @@ $(document).delegate('#dateOfStudy' , 'change' , function() {
 $(document).delegate('.modality' , 'click' , function(e) {
     console.log($(e.currentTarget));
     
-    if($().data('modality')=="ALL") {
-        $('.modality input[type=checkbox]').prop('checked',null);
-        $('.modality ').prop('checked', true);
-    }
-    else {
-        $('.modality ').prop('checked', false);
-    }
+    // if($('input').data('modality')=="ALL") {
+    //     $('.modality input[type=checkbox]').prop('checked',false);
+    //     $('.modality input').prop('checked', true);
+    // }
+    // else {
+    //     $('.modality input').prop('checked', false);
+    // }
     
 });
 

@@ -3,8 +3,8 @@
     
     $token = $server->setToken();
     $_SESSION['token'] = $token->access_token;
-    $res = $server->test("StudyDate=");
+    $res = $server->getStudies();
 
     echo "<pre>";
-    print_r(count($res));
+    print_r($res[0]);
     echo "</pre>"; 

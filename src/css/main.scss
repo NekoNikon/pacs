@@ -255,11 +255,8 @@
                 }
             }
             #wrap-footer {
-                // margin-top: -80px;
                 position: relative;
-                // height: 80px;
                 #footer {
-                    // position: absolute;
                     width: 100%;
                     #info {
                         &.card  {
@@ -277,6 +274,8 @@
                                 width: 100%;
                                 height: 100%;
                                 display: flex;
+                                top: 50%;
+                                right: 50%;
                                 p {
                                     text-align: center;
                                     margin: auto; /* Important */
@@ -286,8 +285,13 @@
                         }
                         .series {
                             position: relative;
-                            &.pic-flex {
+                            &.no-pic {
                                 display: flex;
+                            }
+                            &.pic-flex {
+                                overflow: auto;
+                                display: grid;
+                                grid-template-columns: repeat(auto-fill,minmax(160px, 1fr));
                             }
                             border-right: 1px solid $border-color;
                             div.pic-block {
@@ -310,6 +314,7 @@
                             display: flex;
 
                             .pic {
+                                
                                 margin-left: auto;
                             }
                         }
@@ -567,4 +572,13 @@
 
   .datepicker {
       background-color: $base-color;
+      color: $font-color; 
+      table tr td.active.active {
+          background-color: $main-color !important;
+          color: $select-color;
+      }
+      table tr td.active, .datepicker table tr td.active:hover {
+            background-image: linear-gradient(to bottom, $main-color, $main-color) !important;
+            background-color: $main-color !important;
+      }
   }
